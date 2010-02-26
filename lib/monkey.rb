@@ -11,7 +11,7 @@ module Monkey
     end
   end
   
-  def self.patch(object, method, force = true, &scope)
+  def self.patch(object, method, force = false, &scope)
     if object.kind_of?(Class)
       _patch(object, object, method, force, &scope)
     else
