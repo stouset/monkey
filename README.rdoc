@@ -1,0 +1,63 @@
+= Monkey
+
+Monkey is a smart, scoped monkeypatching library. You can define monkeypatches
+via an intuitive DSL, and apply them only to scoped blocks, assured that your
+changes won't leak out to objects outside your scope.
+
+== Usage
+  
+=== Monkeypatching objects
+
+  # define the "metaclass" monkeypatch on Object
+  Monkey.see(Object) do
+    def metaclass
+      class << self; self; end
+    end
+  end
+  
+  # patch Object to include the "metaclass" monkeypatch for the duration of
+  # the block
+  Monkey.patch(Object, :metaclass) do
+    "foo".metaclass # => #<Class:#<String:0x1016d7570>>
+  end
+  
+  # the monkeypatch doesn't make it out of the scope
+  "foo".metaclass # => NoMethodError
+  
+  # patch Object to include the "metaclass" monkeypatch
+  Monkey.patch(Object, :metaclass)
+  
+  # the monkeypatch persists
+  "foo".metaclass # => #<Class:#<String:0x1016d7570>>  
+
+=== Monkeypatching classes
+ 
+  # define the "foo" and "bar" monkeypatches on the class-level of Object
+  Monkey.see(Object.metaclass) do
+    def foo
+      Kernel.rand
+    end
+    
+    def bar
+      "hello!"
+    end
+  end
+  
+  Monkey.patch(Object.metaclass, :foo, :bar) do
+    Object.foo # => 0.571499912853919
+    Object.bar # => "hello!"
+  end
+
+=== Monkeypatching instances
+
+  # define the "metaclass" monkeypatch on Object
+  Monkey.see(Object) do
+    def metaclass
+      class << self; self; end
+    end
+  end
+  
+  a = "foo"
+  
+  Monkey.patch(a, :metaclass) { a.metaclass }
+    
