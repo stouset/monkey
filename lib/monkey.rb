@@ -31,11 +31,11 @@ module Monkey
   end
   
   #
-  # Patches +object+ to contain the monkeypatched +method+. If a block is
-  # passed, the monkeypatch is only # active for the duration of the block, 
-  # and the return value is the return # value of the block.
+  # Patches +object+ to contain the monkeypatched +methods+. If a block is
+  # passed, the monkeypatches are only active for the duration of the block, 
+  # and the return value is the return value of the block.
   #
-  # Raises a Monkey::MethodMissingError if no such monkeypatch is defined.
+  # Raises a Monkey::MethodMissingError if a named monkeypatch is not defined.
   #
   #   Monkey.patch(Object, :metaclass) do
   #     "foo".metaclass # => #<Class:#<String:0x10153caf8>>
@@ -43,56 +43,59 @@ module Monkey
   #
   #   "foo".metaclass # => NoMethodError
   #
-  def self.patch(object, method, &scope)
+  def self.patch(object, *methods, &scope)
     # if the object is a class or metaclass, monkeypatch the class, otherwise
     # monkeypatch the metaclass of the object
     if object.kind_of?(Class)
-      _patch(object, object, method, &scope)
+      _patch(object, object, *methods, &scope)
     else
       metaclass = (class << object; self; end)
       klass     = object.class
       
-      _patch(metaclass, klass, method, &scope)
+      _patch(metaclass, klass, *methods, &scope)
     end
   end
   
   private
   
   #
-  # Actually applies a monkeypatch to +object+. Looks up the +method+ to be
+  # Actually applies monkeypatches to +object+. Looks up the +methods+ to be
   # patched in the scope of of +klass+.
   #
-  def self._patch(object, klass, method, &scope)
-    patch = patch_for(klass, method)
+  def self._patch(object, klass, *methods, &scope)
+    patches = methods.map do |method|
+      patch = klass.ancestors.map {|a| patch_for(a, method) }.compact.first
+      error_missing(klass, method) if patch.nil?
+      patch
+    end
     
-    error_missing(klass, method) if patch.nil?
-    
-    scope ? scope_patch(object, patch, &scope) : apply_patch(object, patch)
+    scope ? scope_patches(object, *patches, &scope) \
+          : apply_patches(object, *patches)
   end
   
   #
-  # Applies +patch+ to +object+, yields, then removes the patch when the block
-  # returns.
+  # Applies +patches+ to +object+, yields, then removes the patches when the
+  # block returns.
   #
-  def self.scope_patch(object, patch)
-    apply_patch(object, patch)
+  def self.scope_patches(object, *patches)
+    apply_patches(object, *patches)
     yield
   ensure
-    remove_patch(object, patch)
+    remove_patches(object, *patches)
   end
   
   #
-  # Applies the Module +patch+ to +object+.
+  # Applies the Modules +patches+ to +object+.
   #
-  def self.apply_patch(object, patch)
-    object.send(:include, patch)
+  def self.apply_patches(object, *patches)
+    patches.each {|patch| object.send(:include, patch) }
   end
   
   #
-  # Removes the module +patch+ from +object+.
+  # Removes the Modules +patches+ from +object+.
   #
-  def self.remove_patch(object, patch)
-    object.send(:uninclude, patch)
+  def self.remove_patches(object, *patches)
+    patches.each {|patch| object.send(:uninclude, patch) }
   end
   
   #
