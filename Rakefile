@@ -6,14 +6,15 @@ require 'rake/version_task'
 require 'spec/rake/spectask'
 
 spec = Gem::Specification.new do |s|
-  s.name    = 'monkey'
-  s.version = Version.current
-  s.summary = 'A smart, scoped monkeypatching library'
+  s.name     = 'monkey'
+  s.version  = Version.current
+  s.summary  = 'A smart, scoped monkeypatching library'
+  s.homepage = 'http://github.com/stouset/monkey-patches'
   
-  s.author  = 'Stephen Touset'
-  s.email   = 'stephen@touset.org'
+  s.author = 'Stephen Touset'
+  s.email  = 'stephen@touset.org'
   
-  s.files   = Dir['[A-Z]*', 'lib/**/*.rb', 'spec/**/*']
+  s.files = Dir['[A-Z]*', 'lib/**/*.rb', 'spec/**/*']
   
   s.extra_rdoc_files = Dir['*.rdoc']
   s.rdoc_options     = %w{ --main README.rdoc }
