@@ -1,4 +1,4 @@
-= Monkey
+= monkey
 
 Monkey is a smart, scoped monkeypatching library. You can define monkeypatches
 via an intuitive DSL, and apply them only to scoped blocks, assured that your
