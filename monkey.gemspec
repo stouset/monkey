@@ -2,14 +2,15 @@
 
 Gem::Specification.new do |s|
   s.name = %q{monkey}
-  s.version = "0.6.0"
+  s.version = "0.6.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Stephen Touset"]
-  s.date = %q{2010-07-12}
+  s.date = %q{2010-07-14}
   s.email = %q{stephen@touset.org}
   s.extra_rdoc_files = ["README.rdoc"]
-  s.files = ["Rakefile", "README.rdoc", "VERSION", "lib/monkey/ext/modexcl/mrimodexcl.rb", "lib/monkey/ext/modexcl/rbmodexcl.rb", "lib/monkey/ext/modexcl/rbxmodexcl.rb", "lib/monkey.rb"]
+  s.files = ["LICENSE", "Rakefile", "README.rdoc", "VERSION", "lib/monkey/ext/modexcl/mrimodexcl.rb", "lib/monkey/ext/modexcl/rbmodexcl.rb", "lib/monkey/ext/modexcl/rbxmodexcl.rb", "lib/monkey.rb"]
+  s.homepage = %q{http://github.com/stouset/monkey-patches}
   s.rdoc_options = ["--main", "README.rdoc"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
