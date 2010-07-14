@@ -46,7 +46,7 @@ module Monkey
   def self.patch(object, *methods, &scope)
     # if the object is a class or metaclass, monkeypatch the class, otherwise
     # monkeypatch the metaclass of the object
-    if object.kind_of?(Class)
+    if object.kind_of?(Class) || object == Kernel
       _patch(object, object, *methods, &scope)
     else
       metaclass = (class << object; self; end)
