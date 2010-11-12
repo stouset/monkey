@@ -19,6 +19,8 @@ spec = Gem::Specification.new do |s|
   s.extra_rdoc_files = Dir['*.rdoc']
   s.rdoc_options     = %w{ --main README.rdoc }
   
+  s.add_dependency 'RubyInline'
+  
   s.add_development_dependency 'version'
   s.add_development_dependency 'rspec'
 end
